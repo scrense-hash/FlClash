@@ -494,6 +494,61 @@ class AppLocalizations {
     );
   }
 
+  /// `WebDAV`
+  String get webDav {
+    return Intl.message('WebDAV', name: 'webDav', desc: '', args: []);
+  }
+
+  /// `Obtain profile through WebDAV`
+  String get webDavDesc {
+    return Intl.message(
+      'Obtain profile through WebDAV',
+      name: 'webDavDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Real subscription URL`
+  String get webDavSubscriptionUrl {
+    return Intl.message(
+      'Real subscription URL',
+      name: 'webDavSubscriptionUrl',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `WebDAV login`
+  String get webDavLogin {
+    return Intl.message(
+      'WebDAV login',
+      name: 'webDavLogin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `WebDAV password`
+  String get webDavPassword {
+    return Intl.message(
+      'WebDAV password',
+      name: 'webDavPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscription password`
+  String get subscriptionPassword {
+    return Intl.message(
+      'Subscription password',
+      name: 'subscriptionPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `File`
   String get file {
     return Intl.message('File', name: 'file', desc: '', args: []);

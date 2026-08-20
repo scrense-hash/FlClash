@@ -33,7 +33,7 @@ class Database extends _$Database {
   Database([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {
@@ -51,6 +51,9 @@ class Database extends _$Database {
           await m.createTable(iconRecords);
           await _resetOrders();
           await _migrateRules(m);
+        }
+        if (from < 3) {
+          await _migrateProfilesWebDav(m);
         }
       },
     );
@@ -101,6 +104,21 @@ class Database extends _$Database {
     }
     await customStatement('ALTER TABLE rules DROP COLUMN value');
     await m.createIndex(idxRuleTarget);
+  }
+
+  Future<void> _migrateProfilesWebDav(Migrator m) async {
+    await customStatement(
+      'ALTER TABLE profiles ADD COLUMN web_dav INTEGER NOT NULL DEFAULT 0',
+    );
+    await customStatement(
+      'ALTER TABLE profiles ADD COLUMN web_dav_username TEXT NOT NULL DEFAULT ""',
+    );
+    await customStatement(
+      'ALTER TABLE profiles ADD COLUMN web_dav_password TEXT NOT NULL DEFAULT ""',
+    );
+    await customStatement(
+      'ALTER TABLE profiles ADD COLUMN subscription_password TEXT NOT NULL DEFAULT ""',
+    );
   }
 
   Future<void> _resetOrders() async {

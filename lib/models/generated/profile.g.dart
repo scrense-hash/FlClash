@@ -39,6 +39,10 @@ _Profile _$ProfileFromJson(Map<String, dynamic> json) => _Profile(
           json['subscriptionInfo'] as Map<String, dynamic>,
         ),
   autoUpdate: json['autoUpdate'] as bool? ?? true,
+  webDav: json['webDav'] as bool? ?? false,
+  webDavUsername: json['webDavUsername'] as String? ?? '',
+  webDavPassword: json['webDavPassword'] as String? ?? '',
+  subscriptionPassword: json['subscriptionPassword'] as String? ?? '',
   selectedMap:
       (json['selectedMap'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
@@ -63,6 +67,10 @@ Map<String, dynamic> _$ProfileToJson(_Profile instance) => <String, dynamic>{
   'autoUpdateDuration': instance.autoUpdateDuration.inMicroseconds,
   'subscriptionInfo': instance.subscriptionInfo,
   'autoUpdate': instance.autoUpdate,
+  'webDav': instance.webDav,
+  'webDavUsername': instance.webDavUsername,
+  'webDavPassword': instance.webDavPassword,
+  'subscriptionPassword': instance.subscriptionPassword,
   'selectedMap': instance.selectedMap,
   'unfoldSet': instance.unfoldSet.toList(),
   'overwriteType': _$OverwriteTypeEnumMap[instance.overwriteType]!,

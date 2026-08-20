@@ -26,6 +26,15 @@ class Profiles extends Table {
 
   BoolColumn get autoUpdate => boolean()();
 
+  BoolColumn get webDav => boolean().withDefault(const Constant(false))();
+
+  TextColumn get webDavUsername => text().withDefault(const Constant(''))();
+
+  TextColumn get webDavPassword => text().withDefault(const Constant(''))();
+
+  TextColumn get subscriptionPassword =>
+      text().withDefault(const Constant(''))();
+
   TextColumn get selectedMap => text().map(const StringMapConverter())();
 
   TextColumn get unfoldSet => text().map(const StringSetConverter())();
@@ -115,6 +124,10 @@ extension RawProfilExt on RawProfile {
       autoUpdateDuration: Duration(milliseconds: autoUpdateDurationMillis),
       subscriptionInfo: subscriptionInfo,
       autoUpdate: autoUpdate,
+      webDav: webDav,
+      webDavUsername: webDavUsername,
+      webDavPassword: webDavPassword,
+      subscriptionPassword: subscriptionPassword,
       selectedMap: selectedMap,
       unfoldSet: unfoldSet,
       overwriteType: overwriteType,
@@ -135,6 +148,10 @@ extension ProfilesCompanionExt on Profile {
       autoUpdateDurationMillis: autoUpdateDuration.inMilliseconds,
       subscriptionInfo: Value(subscriptionInfo),
       autoUpdate: autoUpdate,
+      webDav: Value(webDav),
+      webDavUsername: Value(webDavUsername),
+      webDavPassword: Value(webDavPassword),
+      subscriptionPassword: Value(subscriptionPassword),
       selectedMap: selectedMap,
       unfoldSet: unfoldSet,
       overwriteType: overwriteType,

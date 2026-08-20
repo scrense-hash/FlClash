@@ -30,6 +30,9 @@ class _EditProfileViewState extends State<EditProfileView> {
   late final TextEditingController _labelController;
   late final TextEditingController _urlController;
   late final TextEditingController _autoUpdateDurationController;
+  late final TextEditingController _webDavUsernameController;
+  late final TextEditingController _webDavPasswordController;
+  late final TextEditingController _subscriptionPasswordController;
   late bool _autoUpdate;
   String? _rawText;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -44,6 +47,15 @@ class _EditProfileViewState extends State<EditProfileView> {
     _autoUpdate = widget.profile.autoUpdate;
     _autoUpdateDurationController = TextEditingController(
       text: widget.profile.autoUpdateDuration.inMinutes.toString(),
+    );
+    _webDavUsernameController = TextEditingController(
+      text: widget.profile.webDavUsername,
+    );
+    _webDavPasswordController = TextEditingController(
+      text: widget.profile.webDavPassword,
+    );
+    _subscriptionPasswordController = TextEditingController(
+      text: widget.profile.subscriptionPassword,
     );
     _updateFileInfo();
   }
@@ -66,6 +78,9 @@ class _EditProfileViewState extends State<EditProfileView> {
       autoUpdateDuration: Duration(
         minutes: int.parse(_autoUpdateDurationController.text),
       ),
+      webDavUsername: _webDavUsernameController.text,
+      webDavPassword: _webDavPasswordController.text,
+      subscriptionPassword: _subscriptionPasswordController.text,
     );
     final profilesAction = globalState.container.read(
       profilesActionProvider.notifier,
@@ -204,6 +219,9 @@ class _EditProfileViewState extends State<EditProfileView> {
     _urlController.dispose();
     _fileInfoNotifier.dispose();
     _autoUpdateDurationController.dispose();
+    _webDavUsernameController.dispose();
+    _webDavPasswordController.dispose();
+    _subscriptionPasswordController.dispose();
     super.dispose();
     globalState.container.read(setupActionProvider.notifier).autoApplyProfile();
   }
@@ -253,6 +271,49 @@ class _EditProfileViewState extends State<EditProfileView> {
             },
           ),
         ),
+        if (widget.profile.webDav) ...[
+          ListItem(
+            title: TextFormField(
+              textInputAction: TextInputAction.next,
+              controller: _webDavUsernameController,
+              inputFormatters: TextInputLimits.limit(
+                TextInputLimits.userName,
+              ),
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: appLocalizations.webDavLogin,
+              ),
+            ),
+          ),
+          ListItem(
+            title: TextFormField(
+              textInputAction: TextInputAction.next,
+              controller: _webDavPasswordController,
+              inputFormatters: TextInputLimits.limit(
+                TextInputLimits.password,
+              ),
+              obscureText: true,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: appLocalizations.webDavPassword,
+              ),
+            ),
+          ),
+          ListItem(
+            title: TextFormField(
+              textInputAction: TextInputAction.next,
+              controller: _subscriptionPasswordController,
+              inputFormatters: TextInputLimits.limit(
+                TextInputLimits.password,
+              ),
+              obscureText: true,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: appLocalizations.subscriptionPassword,
+              ),
+            ),
+          ),
+        ],
         ListItem.toggle(
           title: Text(appLocalizations.autoUpdate),
           value: _autoUpdate,

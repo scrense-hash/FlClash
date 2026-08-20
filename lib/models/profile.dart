@@ -51,6 +51,10 @@ abstract class Profile with _$Profile {
     required Duration autoUpdateDuration,
     SubscriptionInfo? subscriptionInfo,
     @Default(true) bool autoUpdate,
+    @Default(false) bool webDav,
+    @Default('') String webDavUsername,
+    @Default('') String webDavPassword,
+    @Default('') String subscriptionPassword,
     @Default({}) Map<String, String> selectedMap,
     @Default({}) Set<String> unfoldSet,
     @Default(OverwriteType.standard) OverwriteType overwriteType,
@@ -173,16 +177,24 @@ extension ProfileExtension on Profile {
   }
 
   Future<Profile> update() async {
-    final response = await request.getFileResponseForUrl(url);
+    final response = webDav
+        ? await request.getFileResponseForUrlWithAuth(
+            url,
+            username: webDavUsername,
+            password: webDavPassword,
+          )
+        : await request.getFileResponseForUrl(url);
     final disposition = response.headers.value('content-disposition');
     final userinfo = response.headers.value('subscription-userinfo');
+    final data = response.data ?? Uint8List.fromList([]);
+    final bytes = webDav ? decryptSubscription(data, subscriptionPassword) : data;
     return copyWith(
       label: label.takeFirstValid([
         utils.getFileNameForDisposition(disposition),
         id.toString(),
       ]),
       subscriptionInfo: SubscriptionInfo.formHString(userinfo),
-    ).saveFile(response.data ?? Uint8List.fromList([]));
+    ).saveFile(bytes);
   }
 
   Future<Profile> saveFile(Uint8List bytes) async {

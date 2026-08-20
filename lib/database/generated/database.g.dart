@@ -113,6 +113,55 @@ class $ProfilesTable extends Profiles
       'CHECK ("auto_update" IN (0, 1))',
     ),
   );
+  static const VerificationMeta _webDavMeta = const VerificationMeta('webDav');
+  @override
+  late final GeneratedColumn<bool> webDav = GeneratedColumn<bool>(
+    'web_dav',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("web_dav" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _webDavUsernameMeta = const VerificationMeta(
+    'webDavUsername',
+  );
+  @override
+  late final GeneratedColumn<String> webDavUsername = GeneratedColumn<String>(
+    'web_dav_username',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _webDavPasswordMeta = const VerificationMeta(
+    'webDavPassword',
+  );
+  @override
+  late final GeneratedColumn<String> webDavPassword = GeneratedColumn<String>(
+    'web_dav_password',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _subscriptionPasswordMeta =
+      const VerificationMeta('subscriptionPassword');
+  @override
+  late final GeneratedColumn<String> subscriptionPassword =
+      GeneratedColumn<String>(
+        'subscription_password',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(''),
+      );
   @override
   late final GeneratedColumnWithTypeConverter<Map<String, String>, String>
   selectedMap = GeneratedColumn<String>(
@@ -152,6 +201,10 @@ class $ProfilesTable extends Profiles
     autoUpdateDurationMillis,
     subscriptionInfo,
     autoUpdate,
+    webDav,
+    webDavUsername,
+    webDavPassword,
+    subscriptionPassword,
     selectedMap,
     unfoldSet,
     order,
@@ -230,6 +283,39 @@ class $ProfilesTable extends Profiles
     } else if (isInserting) {
       context.missing(_autoUpdateMeta);
     }
+    if (data.containsKey('web_dav')) {
+      context.handle(
+        _webDavMeta,
+        webDav.isAcceptableOrUnknown(data['web_dav']!, _webDavMeta),
+      );
+    }
+    if (data.containsKey('web_dav_username')) {
+      context.handle(
+        _webDavUsernameMeta,
+        webDavUsername.isAcceptableOrUnknown(
+          data['web_dav_username']!,
+          _webDavUsernameMeta,
+        ),
+      );
+    }
+    if (data.containsKey('web_dav_password')) {
+      context.handle(
+        _webDavPasswordMeta,
+        webDavPassword.isAcceptableOrUnknown(
+          data['web_dav_password']!,
+          _webDavPasswordMeta,
+        ),
+      );
+    }
+    if (data.containsKey('subscription_password')) {
+      context.handle(
+        _subscriptionPasswordMeta,
+        subscriptionPassword.isAcceptableOrUnknown(
+          data['subscription_password']!,
+          _subscriptionPasswordMeta,
+        ),
+      );
+    }
     if (data.containsKey('order')) {
       context.handle(
         _orderMeta,
@@ -289,6 +375,22 @@ class $ProfilesTable extends Profiles
         DriftSqlType.bool,
         data['${effectivePrefix}auto_update'],
       )!,
+      webDav: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}web_dav'],
+      )!,
+      webDavUsername: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}web_dav_username'],
+      )!,
+      webDavPassword: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}web_dav_password'],
+      )!,
+      subscriptionPassword: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subscription_password'],
+      )!,
       selectedMap: $ProfilesTable.$converterselectedMap.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -336,6 +438,10 @@ class RawProfile extends DataClass implements Insertable<RawProfile> {
   final int autoUpdateDurationMillis;
   final SubscriptionInfo? subscriptionInfo;
   final bool autoUpdate;
+  final bool webDav;
+  final String webDavUsername;
+  final String webDavPassword;
+  final String subscriptionPassword;
   final Map<String, String> selectedMap;
   final Set<String> unfoldSet;
   final int? order;
@@ -350,6 +456,10 @@ class RawProfile extends DataClass implements Insertable<RawProfile> {
     required this.autoUpdateDurationMillis,
     this.subscriptionInfo,
     required this.autoUpdate,
+    required this.webDav,
+    required this.webDavUsername,
+    required this.webDavPassword,
+    required this.subscriptionPassword,
     required this.selectedMap,
     required this.unfoldSet,
     this.order,
@@ -383,6 +493,10 @@ class RawProfile extends DataClass implements Insertable<RawProfile> {
       );
     }
     map['auto_update'] = Variable<bool>(autoUpdate);
+    map['web_dav'] = Variable<bool>(webDav);
+    map['web_dav_username'] = Variable<String>(webDavUsername);
+    map['web_dav_password'] = Variable<String>(webDavPassword);
+    map['subscription_password'] = Variable<String>(subscriptionPassword);
     {
       map['selected_map'] = Variable<String>(
         $ProfilesTable.$converterselectedMap.toSql(selectedMap),
@@ -419,6 +533,10 @@ class RawProfile extends DataClass implements Insertable<RawProfile> {
           ? const Value.absent()
           : Value(subscriptionInfo),
       autoUpdate: Value(autoUpdate),
+      webDav: Value(webDav),
+      webDavUsername: Value(webDavUsername),
+      webDavPassword: Value(webDavPassword),
+      subscriptionPassword: Value(subscriptionPassword),
       selectedMap: Value(selectedMap),
       unfoldSet: Value(unfoldSet),
       order: order == null && nullToAbsent
@@ -449,6 +567,12 @@ class RawProfile extends DataClass implements Insertable<RawProfile> {
         json['subscriptionInfo'],
       ),
       autoUpdate: serializer.fromJson<bool>(json['autoUpdate']),
+      webDav: serializer.fromJson<bool>(json['webDav']),
+      webDavUsername: serializer.fromJson<String>(json['webDavUsername']),
+      webDavPassword: serializer.fromJson<String>(json['webDavPassword']),
+      subscriptionPassword: serializer.fromJson<String>(
+        json['subscriptionPassword'],
+      ),
       selectedMap: serializer.fromJson<Map<String, String>>(
         json['selectedMap'],
       ),
@@ -476,6 +600,10 @@ class RawProfile extends DataClass implements Insertable<RawProfile> {
         subscriptionInfo,
       ),
       'autoUpdate': serializer.toJson<bool>(autoUpdate),
+      'webDav': serializer.toJson<bool>(webDav),
+      'webDavUsername': serializer.toJson<String>(webDavUsername),
+      'webDavPassword': serializer.toJson<String>(webDavPassword),
+      'subscriptionPassword': serializer.toJson<String>(subscriptionPassword),
       'selectedMap': serializer.toJson<Map<String, String>>(selectedMap),
       'unfoldSet': serializer.toJson<Set<String>>(unfoldSet),
       'order': serializer.toJson<int?>(order),
@@ -493,6 +621,10 @@ class RawProfile extends DataClass implements Insertable<RawProfile> {
     int? autoUpdateDurationMillis,
     Value<SubscriptionInfo?> subscriptionInfo = const Value.absent(),
     bool? autoUpdate,
+    bool? webDav,
+    String? webDavUsername,
+    String? webDavPassword,
+    String? subscriptionPassword,
     Map<String, String>? selectedMap,
     Set<String>? unfoldSet,
     Value<int?> order = const Value.absent(),
@@ -514,6 +646,10 @@ class RawProfile extends DataClass implements Insertable<RawProfile> {
         ? subscriptionInfo.value
         : this.subscriptionInfo,
     autoUpdate: autoUpdate ?? this.autoUpdate,
+    webDav: webDav ?? this.webDav,
+    webDavUsername: webDavUsername ?? this.webDavUsername,
+    webDavPassword: webDavPassword ?? this.webDavPassword,
+    subscriptionPassword: subscriptionPassword ?? this.subscriptionPassword,
     selectedMap: selectedMap ?? this.selectedMap,
     unfoldSet: unfoldSet ?? this.unfoldSet,
     order: order.present ? order.value : this.order,
@@ -542,6 +678,16 @@ class RawProfile extends DataClass implements Insertable<RawProfile> {
       autoUpdate: data.autoUpdate.present
           ? data.autoUpdate.value
           : this.autoUpdate,
+      webDav: data.webDav.present ? data.webDav.value : this.webDav,
+      webDavUsername: data.webDavUsername.present
+          ? data.webDavUsername.value
+          : this.webDavUsername,
+      webDavPassword: data.webDavPassword.present
+          ? data.webDavPassword.value
+          : this.webDavPassword,
+      subscriptionPassword: data.subscriptionPassword.present
+          ? data.subscriptionPassword.value
+          : this.subscriptionPassword,
       selectedMap: data.selectedMap.present
           ? data.selectedMap.value
           : this.selectedMap,
@@ -563,6 +709,10 @@ class RawProfile extends DataClass implements Insertable<RawProfile> {
           ..write('autoUpdateDurationMillis: $autoUpdateDurationMillis, ')
           ..write('subscriptionInfo: $subscriptionInfo, ')
           ..write('autoUpdate: $autoUpdate, ')
+          ..write('webDav: $webDav, ')
+          ..write('webDavUsername: $webDavUsername, ')
+          ..write('webDavPassword: $webDavPassword, ')
+          ..write('subscriptionPassword: $subscriptionPassword, ')
           ..write('selectedMap: $selectedMap, ')
           ..write('unfoldSet: $unfoldSet, ')
           ..write('order: $order')
@@ -582,6 +732,10 @@ class RawProfile extends DataClass implements Insertable<RawProfile> {
     autoUpdateDurationMillis,
     subscriptionInfo,
     autoUpdate,
+    webDav,
+    webDavUsername,
+    webDavPassword,
+    subscriptionPassword,
     selectedMap,
     unfoldSet,
     order,
@@ -600,6 +754,10 @@ class RawProfile extends DataClass implements Insertable<RawProfile> {
           other.autoUpdateDurationMillis == this.autoUpdateDurationMillis &&
           other.subscriptionInfo == this.subscriptionInfo &&
           other.autoUpdate == this.autoUpdate &&
+          other.webDav == this.webDav &&
+          other.webDavUsername == this.webDavUsername &&
+          other.webDavPassword == this.webDavPassword &&
+          other.subscriptionPassword == this.subscriptionPassword &&
           other.selectedMap == this.selectedMap &&
           other.unfoldSet == this.unfoldSet &&
           other.order == this.order);
@@ -616,6 +774,10 @@ class ProfilesCompanion extends UpdateCompanion<RawProfile> {
   final Value<int> autoUpdateDurationMillis;
   final Value<SubscriptionInfo?> subscriptionInfo;
   final Value<bool> autoUpdate;
+  final Value<bool> webDav;
+  final Value<String> webDavUsername;
+  final Value<String> webDavPassword;
+  final Value<String> subscriptionPassword;
   final Value<Map<String, String>> selectedMap;
   final Value<Set<String>> unfoldSet;
   final Value<int?> order;
@@ -630,6 +792,10 @@ class ProfilesCompanion extends UpdateCompanion<RawProfile> {
     this.autoUpdateDurationMillis = const Value.absent(),
     this.subscriptionInfo = const Value.absent(),
     this.autoUpdate = const Value.absent(),
+    this.webDav = const Value.absent(),
+    this.webDavUsername = const Value.absent(),
+    this.webDavPassword = const Value.absent(),
+    this.subscriptionPassword = const Value.absent(),
     this.selectedMap = const Value.absent(),
     this.unfoldSet = const Value.absent(),
     this.order = const Value.absent(),
@@ -645,6 +811,10 @@ class ProfilesCompanion extends UpdateCompanion<RawProfile> {
     required int autoUpdateDurationMillis,
     this.subscriptionInfo = const Value.absent(),
     required bool autoUpdate,
+    this.webDav = const Value.absent(),
+    this.webDavUsername = const Value.absent(),
+    this.webDavPassword = const Value.absent(),
+    this.subscriptionPassword = const Value.absent(),
     required Map<String, String> selectedMap,
     required Set<String> unfoldSet,
     this.order = const Value.absent(),
@@ -666,6 +836,10 @@ class ProfilesCompanion extends UpdateCompanion<RawProfile> {
     Expression<int>? autoUpdateDurationMillis,
     Expression<String>? subscriptionInfo,
     Expression<bool>? autoUpdate,
+    Expression<bool>? webDav,
+    Expression<String>? webDavUsername,
+    Expression<String>? webDavPassword,
+    Expression<String>? subscriptionPassword,
     Expression<String>? selectedMap,
     Expression<String>? unfoldSet,
     Expression<int>? order,
@@ -682,6 +856,11 @@ class ProfilesCompanion extends UpdateCompanion<RawProfile> {
         'auto_update_duration_millis': autoUpdateDurationMillis,
       if (subscriptionInfo != null) 'subscription_info': subscriptionInfo,
       if (autoUpdate != null) 'auto_update': autoUpdate,
+      if (webDav != null) 'web_dav': webDav,
+      if (webDavUsername != null) 'web_dav_username': webDavUsername,
+      if (webDavPassword != null) 'web_dav_password': webDavPassword,
+      if (subscriptionPassword != null)
+        'subscription_password': subscriptionPassword,
       if (selectedMap != null) 'selected_map': selectedMap,
       if (unfoldSet != null) 'unfold_set': unfoldSet,
       if (order != null) 'order': order,
@@ -699,6 +878,10 @@ class ProfilesCompanion extends UpdateCompanion<RawProfile> {
     Value<int>? autoUpdateDurationMillis,
     Value<SubscriptionInfo?>? subscriptionInfo,
     Value<bool>? autoUpdate,
+    Value<bool>? webDav,
+    Value<String>? webDavUsername,
+    Value<String>? webDavPassword,
+    Value<String>? subscriptionPassword,
     Value<Map<String, String>>? selectedMap,
     Value<Set<String>>? unfoldSet,
     Value<int?>? order,
@@ -715,6 +898,10 @@ class ProfilesCompanion extends UpdateCompanion<RawProfile> {
           autoUpdateDurationMillis ?? this.autoUpdateDurationMillis,
       subscriptionInfo: subscriptionInfo ?? this.subscriptionInfo,
       autoUpdate: autoUpdate ?? this.autoUpdate,
+      webDav: webDav ?? this.webDav,
+      webDavUsername: webDavUsername ?? this.webDavUsername,
+      webDavPassword: webDavPassword ?? this.webDavPassword,
+      subscriptionPassword: subscriptionPassword ?? this.subscriptionPassword,
       selectedMap: selectedMap ?? this.selectedMap,
       unfoldSet: unfoldSet ?? this.unfoldSet,
       order: order ?? this.order,
@@ -760,6 +947,20 @@ class ProfilesCompanion extends UpdateCompanion<RawProfile> {
     if (autoUpdate.present) {
       map['auto_update'] = Variable<bool>(autoUpdate.value);
     }
+    if (webDav.present) {
+      map['web_dav'] = Variable<bool>(webDav.value);
+    }
+    if (webDavUsername.present) {
+      map['web_dav_username'] = Variable<String>(webDavUsername.value);
+    }
+    if (webDavPassword.present) {
+      map['web_dav_password'] = Variable<String>(webDavPassword.value);
+    }
+    if (subscriptionPassword.present) {
+      map['subscription_password'] = Variable<String>(
+        subscriptionPassword.value,
+      );
+    }
     if (selectedMap.present) {
       map['selected_map'] = Variable<String>(
         $ProfilesTable.$converterselectedMap.toSql(selectedMap.value),
@@ -789,6 +990,10 @@ class ProfilesCompanion extends UpdateCompanion<RawProfile> {
           ..write('autoUpdateDurationMillis: $autoUpdateDurationMillis, ')
           ..write('subscriptionInfo: $subscriptionInfo, ')
           ..write('autoUpdate: $autoUpdate, ')
+          ..write('webDav: $webDav, ')
+          ..write('webDavUsername: $webDavUsername, ')
+          ..write('webDavPassword: $webDavPassword, ')
+          ..write('subscriptionPassword: $subscriptionPassword, ')
           ..write('selectedMap: $selectedMap, ')
           ..write('unfoldSet: $unfoldSet, ')
           ..write('order: $order')
@@ -3477,6 +3682,10 @@ typedef $$ProfilesTableCreateCompanionBuilder =
       required int autoUpdateDurationMillis,
       Value<SubscriptionInfo?> subscriptionInfo,
       required bool autoUpdate,
+      Value<bool> webDav,
+      Value<String> webDavUsername,
+      Value<String> webDavPassword,
+      Value<String> subscriptionPassword,
       required Map<String, String> selectedMap,
       required Set<String> unfoldSet,
       Value<int?> order,
@@ -3493,6 +3702,10 @@ typedef $$ProfilesTableUpdateCompanionBuilder =
       Value<int> autoUpdateDurationMillis,
       Value<SubscriptionInfo?> subscriptionInfo,
       Value<bool> autoUpdate,
+      Value<bool> webDav,
+      Value<String> webDavUsername,
+      Value<String> webDavPassword,
+      Value<String> subscriptionPassword,
       Value<Map<String, String>> selectedMap,
       Value<Set<String>> unfoldSet,
       Value<int?> order,
@@ -3599,6 +3812,26 @@ class $$ProfilesTableFilterComposer
 
   ColumnFilters<bool> get autoUpdate => $composableBuilder(
     column: $table.autoUpdate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get webDav => $composableBuilder(
+    column: $table.webDav,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get webDavUsername => $composableBuilder(
+    column: $table.webDavUsername,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get webDavPassword => $composableBuilder(
+    column: $table.webDavPassword,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get subscriptionPassword => $composableBuilder(
+    column: $table.subscriptionPassword,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3733,6 +3966,26 @@ class $$ProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get webDav => $composableBuilder(
+    column: $table.webDav,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get webDavUsername => $composableBuilder(
+    column: $table.webDavUsername,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get webDavPassword => $composableBuilder(
+    column: $table.webDavPassword,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get subscriptionPassword => $composableBuilder(
+    column: $table.subscriptionPassword,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get selectedMap => $composableBuilder(
     column: $table.selectedMap,
     builder: (column) => ColumnOrderings(column),
@@ -3799,6 +4052,24 @@ class $$ProfilesTableAnnotationComposer
 
   GeneratedColumn<bool> get autoUpdate => $composableBuilder(
     column: $table.autoUpdate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get webDav =>
+      $composableBuilder(column: $table.webDav, builder: (column) => column);
+
+  GeneratedColumn<String> get webDavUsername => $composableBuilder(
+    column: $table.webDavUsername,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get webDavPassword => $composableBuilder(
+    column: $table.webDavPassword,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get subscriptionPassword => $composableBuilder(
+    column: $table.subscriptionPassword,
     builder: (column) => column,
   );
 
@@ -3907,6 +4178,10 @@ class $$ProfilesTableTableManager
                 Value<SubscriptionInfo?> subscriptionInfo =
                     const Value.absent(),
                 Value<bool> autoUpdate = const Value.absent(),
+                Value<bool> webDav = const Value.absent(),
+                Value<String> webDavUsername = const Value.absent(),
+                Value<String> webDavPassword = const Value.absent(),
+                Value<String> subscriptionPassword = const Value.absent(),
                 Value<Map<String, String>> selectedMap = const Value.absent(),
                 Value<Set<String>> unfoldSet = const Value.absent(),
                 Value<int?> order = const Value.absent(),
@@ -3921,6 +4196,10 @@ class $$ProfilesTableTableManager
                 autoUpdateDurationMillis: autoUpdateDurationMillis,
                 subscriptionInfo: subscriptionInfo,
                 autoUpdate: autoUpdate,
+                webDav: webDav,
+                webDavUsername: webDavUsername,
+                webDavPassword: webDavPassword,
+                subscriptionPassword: subscriptionPassword,
                 selectedMap: selectedMap,
                 unfoldSet: unfoldSet,
                 order: order,
@@ -3938,6 +4217,10 @@ class $$ProfilesTableTableManager
                 Value<SubscriptionInfo?> subscriptionInfo =
                     const Value.absent(),
                 required bool autoUpdate,
+                Value<bool> webDav = const Value.absent(),
+                Value<String> webDavUsername = const Value.absent(),
+                Value<String> webDavPassword = const Value.absent(),
+                Value<String> subscriptionPassword = const Value.absent(),
                 required Map<String, String> selectedMap,
                 required Set<String> unfoldSet,
                 Value<int?> order = const Value.absent(),
@@ -3952,6 +4235,10 @@ class $$ProfilesTableTableManager
                 autoUpdateDurationMillis: autoUpdateDurationMillis,
                 subscriptionInfo: subscriptionInfo,
                 autoUpdate: autoUpdate,
+                webDav: webDav,
+                webDavUsername: webDavUsername,
+                webDavPassword: webDavPassword,
+                subscriptionPassword: subscriptionPassword,
                 selectedMap: selectedMap,
                 unfoldSet: unfoldSet,
                 order: order,

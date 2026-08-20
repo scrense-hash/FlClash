@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -31,10 +32,33 @@ class Request {
   }
 
   Future<Response<Uint8List>> getFileResponseForUrl(String url) async {
+    return _getFileResponse(url);
+  }
+
+  Future<Response<Uint8List>> getFileResponseForUrlWithAuth(
+    String url, {
+    String username = '',
+    String password = '',
+  }) async {
+    return _getFileResponse(
+      url,
+      headers: username.isEmpty
+          ? null
+          : {
+              'Authorization':
+                  'Basic ${base64Encode(utf8.encode('$username:$password'))}',
+            },
+    );
+  }
+
+  Future<Response<Uint8List>> _getFileResponse(
+    String url, {
+    Map<String, dynamic>? headers,
+  }) async {
     try {
       return await _clashDio.get<Uint8List>(
         url,
-        options: Options(responseType: ResponseType.bytes),
+        options: Options(responseType: ResponseType.bytes, headers: headers),
       );
     } catch (e) {
       commonPrint.log('getFileResponseForUrl error ${e.toString()}');

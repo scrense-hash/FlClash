@@ -119,6 +119,35 @@ class ProfilesAction extends _$ProfilesAction {
     }
   }
 
+  Future<void> addProfileFormWebDav({
+    required String url,
+    required String webDavUsername,
+    required String webDavPassword,
+    required String subscriptionPassword,
+    required Duration autoUpdateDuration,
+  }) async {
+    if (globalState.navigatorKey.currentState?.canPop() ?? false) {
+      globalState.navigatorKey.currentState?.popUntil((route) => route.isFirst);
+    }
+    ref.read(currentPageLabelProvider.notifier).value = PageLabel.profiles;
+    final profile = await globalState.loadingRun(
+      tag: LoadingTag.profiles,
+      () async {
+        return Profile.normal(url: url).copyWith(
+          webDav: true,
+          webDavUsername: webDavUsername,
+          webDavPassword: webDavPassword,
+          subscriptionPassword: subscriptionPassword,
+          autoUpdateDuration: autoUpdateDuration,
+        ).update();
+      },
+      title: currentAppLocalizations.addProfile,
+    );
+    if (profile != null) {
+      putProfile(profile);
+    }
+  }
+
   void setProfileAndAutoApply(Profile profile) {
     ref.read(profilesProvider.notifier).put(profile);
     if (profile.id == ref.read(currentProfileIdProvider)) {

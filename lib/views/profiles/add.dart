@@ -62,6 +62,22 @@ class AddProfileView extends StatelessWidget {
     }
   }
 
+  Future<void> _toWebDav() async {
+    final result = await globalState.showCommonDialog<WebDavFormResult>(
+      child: const WebDavFormDialog(),
+    );
+    if (result == null) return;
+    globalState.container
+        .read(profilesActionProvider.notifier)
+        .addProfileFormWebDav(
+          url: result.url,
+          webDavUsername: result.webDavUsername,
+          webDavPassword: result.webDavPassword,
+          subscriptionPassword: result.subscriptionPassword,
+          autoUpdateDuration: result.autoUpdateDuration,
+        );
+  }
+
   @override
   Widget build(context) {
     final appLocalizations = context.appLocalizations;
@@ -84,6 +100,12 @@ class AddProfileView extends StatelessWidget {
           title: Text(appLocalizations.url),
           subtitle: Text(appLocalizations.urlDesc),
           onTap: _toAdd,
+        ),
+        ListItem(
+          leading: const Icon(Icons.cloud_sharp),
+          title: Text(appLocalizations.webDav),
+          subtitle: Text(appLocalizations.webDavDesc),
+          onTap: _toWebDav,
         ),
       ],
     );
@@ -144,6 +166,194 @@ class _URLFormDialogState extends State<URLFormDialog> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class WebDavFormResult {
+  final String url;
+  final String webDavUsername;
+  final String webDavPassword;
+  final String subscriptionPassword;
+  final Duration autoUpdateDuration;
+
+  const WebDavFormResult({
+    required this.url,
+    required this.webDavUsername,
+    required this.webDavPassword,
+    required this.subscriptionPassword,
+    required this.autoUpdateDuration,
+  });
+}
+
+class WebDavFormDialog extends StatefulWidget {
+  const WebDavFormDialog({super.key});
+
+  @override
+  State<WebDavFormDialog> createState() => _WebDavFormDialogState();
+}
+
+class _WebDavFormDialogState extends State<WebDavFormDialog> {
+  late final TextEditingController _urlController;
+  late final TextEditingController _usernameController;
+  late final TextEditingController _passwordController;
+  late final TextEditingController _subscriptionPasswordController;
+  late final TextEditingController _intervalController;
+  final _passwordObscure = ValueNotifier<bool>(true);
+  final _subscriptionPasswordObscure = ValueNotifier<bool>(true);
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _urlController = TextEditingController();
+    _usernameController = TextEditingController();
+    _passwordController = TextEditingController();
+    _subscriptionPasswordController = TextEditingController();
+    _intervalController = TextEditingController(
+      text: defaultUpdateDuration.inMinutes.toString(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _urlController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _subscriptionPasswordController.dispose();
+    _intervalController.dispose();
+    _passwordObscure.dispose();
+    _subscriptionPasswordObscure.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    if (!_formKey.currentState!.validate()) return;
+    Navigator.of(context).pop(
+      WebDavFormResult(
+        url: _urlController.text.trim(),
+        webDavUsername: _usernameController.text.trim(),
+        webDavPassword: _passwordController.text,
+        subscriptionPassword: _subscriptionPasswordController.text,
+        autoUpdateDuration: Duration(
+          minutes: int.parse(_intervalController.text),
+        ),
+      ),
+    );
+  }
+
+  Widget _obscureField({
+    required TextEditingController controller,
+    required ValueNotifier<bool> obscure,
+    required String label,
+  }) {
+    return ValueListenableBuilder(
+      valueListenable: obscure,
+      builder: (_, value, _) {
+        return TextFormField(
+          controller: controller,
+          obscureText: value,
+          inputFormatters: TextInputLimits.limit(TextInputLimits.password),
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            labelText: label,
+            suffixIcon: IconButton(
+              icon: Icon(value ? Icons.visibility : Icons.visibility_off),
+              onPressed: () {
+                obscure.value = !value;
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final appLocalizations = context.appLocalizations;
+    return CommonDialog(
+      title: appLocalizations.webDav,
+      actions: [
+        TextButton(
+          onPressed: _submit,
+          child: Text(appLocalizations.submit),
+        ),
+      ],
+      child: SizedBox(
+        width: 300,
+        child: Form(
+          key: _formKey,
+          child: Wrap(
+            runSpacing: 16,
+            children: [
+              TextFormField(
+                controller: _urlController,
+                keyboardType: TextInputType.url,
+                minLines: 1,
+                maxLines: 5,
+                inputFormatters: TextInputLimits.limit(TextInputLimits.url),
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: appLocalizations.webDavSubscriptionUrl,
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return appLocalizations.emptyTip(
+                      appLocalizations.webDavSubscriptionUrl,
+                    );
+                  }
+                  if (!value.isUrl) {
+                    return appLocalizations.urlTip('');
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _usernameController,
+                inputFormatters: TextInputLimits.limit(
+                  TextInputLimits.userName,
+                ),
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: appLocalizations.webDavLogin,
+                ),
+              ),
+              _obscureField(
+                controller: _passwordController,
+                obscure: _passwordObscure,
+                label: appLocalizations.webDavPassword,
+              ),
+              _obscureField(
+                controller: _subscriptionPasswordController,
+                obscure: _subscriptionPasswordObscure,
+                label: appLocalizations.subscriptionPassword,
+              ),
+              TextFormField(
+                controller: _intervalController,
+                inputFormatters: TextInputLimits.digitsOnly(
+                  TextInputLimits.interval,
+                ),
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: appLocalizations.autoUpdateInterval,
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return appLocalizations
+                        .profileAutoUpdateIntervalNullValidationDesc;
+                  }
+                  if (int.tryParse(value) == null) {
+                    return appLocalizations
+                        .profileAutoUpdateIntervalInvalidValidationDesc;
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

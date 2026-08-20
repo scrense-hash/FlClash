@@ -979,6 +979,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sub rule cannot be empty",
     ),
     "submit": MessageLookupByLibrary.simpleMessage("Submit"),
+    "subscriptionPassword": MessageLookupByLibrary.simpleMessage(
+      "Subscription password",
+    ),
     "suspended": MessageLookupByLibrary.simpleMessage("Suspended..."),
     "sync": MessageLookupByLibrary.simpleMessage("Sync"),
     "system": MessageLookupByLibrary.simpleMessage("System"),
@@ -1056,6 +1059,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "webDAVConfiguration": MessageLookupByLibrary.simpleMessage(
       "WebDAV configuration",
+    ),
+    "webDav": MessageLookupByLibrary.simpleMessage("WebDAV"),
+    "webDavDesc": MessageLookupByLibrary.simpleMessage(
+      "Obtain profile through WebDAV",
+    ),
+    "webDavLogin": MessageLookupByLibrary.simpleMessage("WebDAV login"),
+    "webDavPassword": MessageLookupByLibrary.simpleMessage("WebDAV password"),
+    "webDavSubscriptionUrl": MessageLookupByLibrary.simpleMessage(
+      "Real subscription URL",
     ),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("Whitelist mode"),
     "yearsAgo": m25,

@@ -23,13 +23,17 @@ void main() {
         expire: 4,
       ),
       autoUpdate: true,
+      webDav: true,
+      webDavUsername: 'user',
+      webDavPassword: 'pass',
+      subscriptionPassword: 'subpass',
       selectedMap: const {'Select': 'DIRECT'},
       unfoldSet: const {'Select'},
       order: 3,
     );
 
-    expect(profile.toColumns(true), hasLength(13));
-    expect(profile.toCompanion(true).toColumns(true), hasLength(13));
+    expect(profile.toColumns(true), hasLength(17));
+    expect(profile.toCompanion(true).toColumns(true), hasLength(17));
     expect(RawProfile.fromJson(profile.toJson()).toJson(), profile.toJson());
     expect(profile.copyWith(label: 'Next').label, 'Next');
     expect(
@@ -55,12 +59,16 @@ void main() {
       overwriteType: OverwriteType.standard,
       autoUpdateDurationMillis: 0,
       autoUpdate: false,
+      webDav: false,
+      webDavUsername: '',
+      webDavPassword: '',
+      subscriptionPassword: '',
       selectedMap: {},
       unfoldSet: {},
     );
-    expect(emptyProfile.toColumns(true), hasLength(8));
-    expect(emptyProfile.toColumns(false), hasLength(13));
-    expect(emptyProfile.toCompanion(true).toColumns(true), hasLength(8));
+    expect(emptyProfile.toColumns(true), hasLength(12));
+    expect(emptyProfile.toColumns(false), hasLength(17));
+    expect(emptyProfile.toCompanion(true).toColumns(true), hasLength(12));
 
     final insertedProfile = ProfilesCompanion.insert(
       label: 'Inserted',
@@ -85,11 +93,15 @@ void main() {
         autoUpdateDurationMillis: const Variable(60),
         subscriptionInfo: const Variable('{}'),
         autoUpdate: const Variable(true),
+        webDav: const Variable(true),
+        webDavUsername: const Variable('user'),
+        webDavPassword: const Variable('pass'),
+        subscriptionPassword: const Variable('subpass'),
         selectedMap: const Variable('{}'),
         unfoldSet: const Variable('[]'),
         order: const Variable(1),
       ).toColumns(false),
-      hasLength(13),
+      hasLength(17),
     );
 
     final script = RawScript(id: 2, label: 'Script', lastUpdateTime: date);

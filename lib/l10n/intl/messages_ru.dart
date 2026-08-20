@@ -1030,6 +1030,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Подправило не может быть пустым",
     ),
     "submit": MessageLookupByLibrary.simpleMessage("Отправить"),
+    "subscriptionPassword": MessageLookupByLibrary.simpleMessage(
+      "Пароль подписки",
+    ),
     "suspended": MessageLookupByLibrary.simpleMessage("Приостановлено..."),
     "sync": MessageLookupByLibrary.simpleMessage("Синхронизация"),
     "system": MessageLookupByLibrary.simpleMessage("Система"),
@@ -1119,6 +1122,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "webDAVConfiguration": MessageLookupByLibrary.simpleMessage(
       "Конфигурация WebDAV",
+    ),
+    "webDav": MessageLookupByLibrary.simpleMessage("WebDAV"),
+    "webDavDesc": MessageLookupByLibrary.simpleMessage(
+      "Получить профиль через WebDav",
+    ),
+    "webDavLogin": MessageLookupByLibrary.simpleMessage("Логин WebDav"),
+    "webDavPassword": MessageLookupByLibrary.simpleMessage("Пароль WebDav"),
+    "webDavSubscriptionUrl": MessageLookupByLibrary.simpleMessage(
+      "Настоящий URL подписки",
     ),
     "whitelistMode": MessageLookupByLibrary.simpleMessage(
       "Режим белого списка",
